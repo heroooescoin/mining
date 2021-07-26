@@ -1,3 +1,10 @@
+const express = require("express");
+const bodyParser = require("body-parser");
+
+const HTTP_PORT = process.env.HTTP_PORT || 3001;
+
+const app = express();
+
 var jsdom = require("jsdom");
 const { JSDOM } = jsdom;
 const { window } = new JSDOM();
@@ -14,6 +21,13 @@ const fs = require('fs');
 const path = 'wallet.dat'
 const outputtext = 'Wallet does not exist! Run CreateWallet to generate a wallet!';
 
+app.use(bodyParser.json());
+
+app.listen(HTTP_PORT, () => {
+    console.log(`Listening on port ${HTTP_PORT}`);
+
+//*******************
+
 console.info('\n\nStarting HeroooesCoin miner - awaiting to resolve block.');
 
 setInterval(function () {
@@ -21,7 +35,7 @@ setInterval(function () {
     try {
         if (fs.existsSync(path)) {
 
-            promise = f1().then(f2).then(f3); // Add handlers to be called when the Deferred object is resolved, rejected, or still in progress.
+            promise = f1().then(f2).then(f3).then(f4); // Add handlers to be called when the Deferred object is resolved, rejected, or still in progress.
         }
         else {
             console.log(outputtext);
@@ -30,6 +44,12 @@ setInterval(function () {
     } catch (err) { console.log(outputtext); }
 
 }, 60 * 60 * 1000);   
+
+
+});
+
+
+
 
 
 //Get the latest block count
@@ -243,6 +263,57 @@ setInterval(function () {
                     reqPost.on('error', function (e) {
                         console.error(e);
                     });
+
+                }
+                else {
+                    console.log(outputtext);
+                }
+
+            } catch (err) {
+                console.log(outputtext);
+            }
+            console.log("3");
+            d.resolve();
+        }, 2000);
+
+        return d.promise();
+    }
+
+
+ function f4() {
+        var d = $.Deferred();
+
+        setTimeout(function () {
+
+            try {
+                if (fs.existsSync(path)) {
+
+                    var objInfo = JSON.parse(fs.readFileSync('info.dat', 'utf8'));
+                    var blocktodownload = objInfo.BlockCount;
+
+                    for (let i = 1; i < blocktodownload - 1; i++) {
+
+  //first check if block exists
+var newpath = i + '.dta';
+
+ if (!fs.existsSync(newpath)) {
+	console.log('start download: ' + newpath);
+//*************
+
+fs.writeFile(i + '.dta', Date.now().toString(), function (err) {
+                    if (err) {
+                        return console.log(err);
+                    }
+                    console.log(i + ' block was initialized!');
+                });	
+
+//sleep(1000);
+//*************
+
+}
+
+
+}
 
                 }
                 else {
